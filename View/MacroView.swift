@@ -9,26 +9,22 @@ import SwiftData
 struct MacroView: View {
     
     @Environment(\.modelContext) var modelContext
-    @State var carbs = 0
-    @State var fats = 0
-    @State var proteins = 0
     
     @Query() var macros: [Macro]
     @Binding var dailyMacros: [DailyMacro]
     
+    @StateObject var viewModel: MacroViewModel
     
     @State var showTextField = false
     @State var showMenu = false
     @State var food = ""
     @State private var selectedMacro: Macro?
-    
-    @State var lastAddedFood: String?
-    @State private var lastAddedCarbs: Int?
-    @State private var lastAddedFats: Int?
-    @State private var lastAddedProteins: Int?
-    
     @EnvironmentObject var macroManager: MacroManager
     
+    init(dailyMacros: Binding<[DailyMacro]>) {
+            self._dailyMacros = dailyMacros
+            self._viewModel = StateObject(wrappedValue: MacroViewModel())
+        }
     
     var body: some View {
             #if DEBUG
@@ -56,18 +52,18 @@ struct MacroView: View {
                             .font(.title)
                             .padding()
                         
-                        MacroHeaderView(carbs: $carbs, fats: $fats, proteins: $proteins)
+                        MacroHeaderView(carbs: $viewModel.carbs, fats: $viewModel.fats, proteins: $viewModel.proteins)
                             .padding()
                         
-                        if let lastAddedFood = lastAddedFood {
+                        if let lastAddedFood = viewModel.lastAddedFood {
                                 Text("Last Added Food: \(lastAddedFood)")
                                 .font(.headline)
                                 .padding()
                             
                             HStack{
-                                if let lastAddedFats = lastAddedFats,
-                                   let lastAddedCarbs = lastAddedCarbs,
-                                   let lastAddedProteins = lastAddedProteins {
+                                if let lastAddedFats = viewModel.lastAddedFats,
+                                   let lastAddedCarbs = viewModel.lastAddedCarbs,
+                                   let lastAddedProteins = viewModel.lastAddedProteins {
                                     Text("carbs:\(lastAddedCarbs)")
                                     Text("fats:\(lastAddedFats)")
                                     Text("proteins:\(lastAddedProteins)")
@@ -124,22 +120,21 @@ struct MacroView: View {
                 }
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .sheet(isPresented: $showTextField) {
-                    AddMacroView(lastAddedFood: $lastAddedFood, lastAddedCarbs: $lastAddedCarbs, lastAddedFats: $lastAddedFats, lastAddedProteins: $lastAddedProteins)
+                    AddMacroView(lastAddedFood: $viewModel.lastAddedFood, lastAddedCarbs: $viewModel.lastAddedCarbs, lastAddedFats: $viewModel.lastAddedFats, lastAddedProteins: $viewModel.lastAddedProteins)
                         .presentationDetents([.fraction(0.4)])
                         .environmentObject(macroManager)
                 }
                 .onDisappear {
                     if let lastMacro = macros.last {
-                            lastAddedFood = lastMacro.food
+                        viewModel.lastAddedFood = lastMacro.food
                     }
                 }
                 .onAppear {
-                    fetchDailyMacros()
-                    fetchTodaysMacro()
+                    viewModel.fetchDailyMacros(macros: macros)
+                    viewModel.fetchTodaysMacro(from: dailyMacros)
                 }
-                .onChange(of: macros) { _, _ in
-                    fetchDailyMacros()
-                    fetchTodaysMacro()
+                .onChange(of: dailyMacros) { _, newDailyMacros in
+                    viewModel.fetchTodaysMacro(from: newDailyMacros)
             }
             }
 
@@ -148,36 +143,6 @@ struct MacroView: View {
     }
     
     
-    
-    private func fetchDailyMacros() {
-        let dates: Set<Date> = Set(macros.map({Calendar.current.startOfDay(for: $0.date) }))
-        
-        var dailyMacros = [DailyMacro]()
-        for date in dates {
-            let filterMacros = macros.filter({ Calendar.current.startOfDay(for: $0.date) == date})
-            let carbs: Int = filterMacros.reduce(0, { $0 + $1.carbs })
-            let fats: Int = filterMacros.reduce(0, { $0 + $1.fats })
-            let proteins: Int = filterMacros.reduce(0, { $0 + $1.proteins })
-            
-            let macro = DailyMacro(date: date, carbs: carbs, fats: fats, proteins: proteins)
-            dailyMacros.append(macro)
-        }
-        
-        self.dailyMacros = dailyMacros.sorted(by: { $0.date > $1.date})
-
-    }
-    
-    private func fetchTodaysMacro() {
-            if let todayMacro = dailyMacros.first(where: { Calendar.current.isDate($0.date, inSameDayAs: Date()) }) {
-                carbs = todayMacro.carbs
-                fats = todayMacro.fats
-                proteins = todayMacro.proteins
-            } else {
-                carbs = 0
-                fats = 0
-                proteins = 0
-            }
-        }
     
 }
 

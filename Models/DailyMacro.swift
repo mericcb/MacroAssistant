@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct DailyMacro: Identifiable {
+struct DailyMacro: Identifiable, Equatable {
     let id = UUID()
     let date: Date
     let carbs: Int

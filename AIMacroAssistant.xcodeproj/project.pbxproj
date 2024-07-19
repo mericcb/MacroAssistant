@@ -30,6 +30,7 @@
 		C3DF26D12C3EEA4D009FAA6C /* SideMenuRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3DF26D02C3EEA4D009FAA6C /* SideMenuRowView.swift */; };
 		C3DF26D32C3EEBE8009FAA6C /* SideMenuOptionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3DF26D22C3EEBE8009FAA6C /* SideMenuOptionModel.swift */; };
 		C3F33A892C493D59006937B6 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F33A882C493D59006937B6 /* SettingView.swift */; };
+		C3F33A982C4B2C4C006937B6 /* MacroViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F33A972C4B2C4C006937B6 /* MacroViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,7 @@
 		C3DF26D02C3EEA4D009FAA6C /* SideMenuRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuRowView.swift; sourceTree = "<group>"; };
 		C3DF26D22C3EEBE8009FAA6C /* SideMenuOptionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuOptionModel.swift; sourceTree = "<group>"; };
 		C3F33A882C493D59006937B6 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		C3F33A972C4B2C4C006937B6 /* MacroViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +162,7 @@
 			isa = PBXGroup;
 			children = (
 				C381618B2C42DB40003BE0B2 /* MacroManager.swift */,
+				C3F33A972C4B2C4C006937B6 /* MacroViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -245,6 +248,7 @@
 				C30A85A52C342E0C004F0E7A /* MacroHeaderView.swift in Sources */,
 				C3DF26CC2C3EE365009FAA6C /* SideMenuHeader.swift in Sources */,
 				C37684B02C3B626100F9DB53 /* AddMacroView.swift in Sources */,
+				C3F33A982C4B2C4C006937B6 /* MacroViewModel.swift in Sources */,
 				C37684B52C3B6CA400F9DB53 /* Date+Ext.swift in Sources */,
 				C37684B32C3B690E00F9DB53 /* MacroDayView.swift in Sources */,
 				C37684B72C3B763500F9DB53 /* DailyMacro.swift in Sources */,
